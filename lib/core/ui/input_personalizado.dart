@@ -27,7 +27,7 @@ class InputPersonalizado extends StatelessWidget {
       validator: validator,
       autocorrect: autocorrect,
       inputFormatters: inputFormatters,
-      keyboardType: TextInputType.phone,
+      keyboardType: keyboardType,
       controller: controller,
       maxLength: maxLength,
       decoration: InputDecoration(

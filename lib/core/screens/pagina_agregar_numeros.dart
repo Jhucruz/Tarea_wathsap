@@ -2,9 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:numeros_whats_app/core/ui/input_personalizado.dart';
+import 'package:numeros_whats_app/models/numero_de_telefono.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:uuid/uuid.dart';
 
 class PaginaAgregarNumeros extends StatefulWidget {
-  const PaginaAgregarNumeros({super.key});
+  const PaginaAgregarNumeros({
+    super.key,
+    required this.alAgregar,
+    required this.numerosDeTelefono,
+  });
+
+  final List<NumeroDeTelefono> numerosDeTelefono;
+  final void Function(NumeroDeTelefono) alAgregar;
 
   @override
   State<PaginaAgregarNumeros> createState() => _PaginaAgregarNumerosState();
@@ -13,6 +23,7 @@ class PaginaAgregarNumeros extends StatefulWidget {
 class _PaginaAgregarNumerosState extends State<PaginaAgregarNumeros> {
   final _idForm = GlobalKey<FormState>();
   final _maskNumero = MaskTextInputFormatter(mask: '(+51) ### ### ###');
+  final _numeroTelefonoController = TextEditingController();
   final _descripcionController = TextEditingController();
 
   @override
@@ -31,6 +42,7 @@ class _PaginaAgregarNumerosState extends State<PaginaAgregarNumeros> {
               validator: (valor) => RequiredValidator(
                       errorText: 'El numero de teléfono es requerido')
                   .call(valor),
+              controller: _numeroTelefonoController,
             ),
             InputPersonalizado(
               controller: _descripcionController,
@@ -43,11 +55,24 @@ class _PaginaAgregarNumerosState extends State<PaginaAgregarNumeros> {
             ),
             ElevatedButton.icon(
               onPressed: () {
-                final esValido = _idForm.currentState?.validate() ?? false;
-                print('+51${_maskNumero.getUnmaskedText()}');
+                _agregarNumero(
+                  despuesDeAgregar: (numeroDeTelofono) {
+                    // Ejemplo de mandar whats app con una mensaje de texto predefinido
+                    final url = Uri.parse(
+                        'https://wa.me/${numeroDeTelofono.numeroDeTelefonoPlano}?text=hola');
+                    launchUrl(url);
+                  },
+                );
               },
               icon: Icon(Icons.person_add),
               label: Text('Abrir en WA'),
+            ),
+            ElevatedButton.icon(
+              onPressed: () {
+                _agregarNumero();
+              },
+              icon: Icon(Icons.save),
+              label: Text('Guardar número'),
             ),
           ],
         ),
@@ -55,8 +80,55 @@ class _PaginaAgregarNumerosState extends State<PaginaAgregarNumeros> {
     );
   }
 
+  void _agregarNumero({void Function(NumeroDeTelefono)? despuesDeAgregar}) {
+    final esValido = _idForm.currentState?.validate() ?? false;
+    if (esValido) {
+      final numeroPlano = '+51${_maskNumero.getUnmaskedText()}';
+      final numeroConFormato = _maskNumero.getMaskedText();
+      final elNumeroExiste =
+          widget.numerosDeTelefono.cast<NumeroDeTelefono?>().firstWhere(
+        (numeroTelefono) {
+          if (numeroTelefono?.numeroDeTelefonoPlano == numeroPlano) {
+            return true;
+          }
+
+          return false;
+        },
+        orElse: () {
+          return null;
+        },
+      );
+
+      if (elNumeroExiste != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('El numero ya existe'),
+          ),
+        );
+      } else {
+        final id = Uuid().v1();
+        final descripcion = _descripcionController.text;
+        final numeroDeTelefono = NumeroDeTelefono(
+          id: id,
+          numeroDeTelefonoPlano: numeroPlano,
+          numeroDeTelefonoFormateado: numeroConFormato,
+          descripcion: descripcion,
+        );
+
+        widget.alAgregar(numeroDeTelefono);
+
+        despuesDeAgregar?.call(numeroDeTelefono);
+
+        _numeroTelefonoController.clear();
+        _descripcionController.clear();
+      }
+      FocusManager.instance.primaryFocus?.unfocus();
+    }
+  }
+
   @override
   void dispose() {
+    _numeroTelefonoController.dispose();
     _descripcionController.dispose();
     super.dispose();
   }
