@@ -48,13 +48,11 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
               setState(() {
                 numerosDeTelefono.add(numeroDeTelefono);
               });
-
-              print(numerosDeTelefono);
             },
             numerosDeTelefono: numerosDeTelefono,
           ),
           PaginaListaDeNumeros(
-            numerosDetelefono: numerosDeTelefono,
+            numerosDeTelefono: numerosDeTelefono,
           ),
         ]),
       ),

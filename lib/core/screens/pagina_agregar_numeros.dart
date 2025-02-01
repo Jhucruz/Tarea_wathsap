@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:numeros_whats_app/core/ui/input_personalizado.dart';
+import 'package:numeros_whats_app/extensions/numero_de_telefono_extension.dart';
+import 'package:numeros_whats_app/extensions/string_extension.dart';
 import 'package:numeros_whats_app/models/numero_de_telefono.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
 class PaginaAgregarNumeros extends StatefulWidget {
@@ -57,10 +58,7 @@ class _PaginaAgregarNumerosState extends State<PaginaAgregarNumeros> {
               onPressed: () {
                 _agregarNumero(
                   despuesDeAgregar: (numeroDeTelofono) {
-                    // Ejemplo de mandar whats app con una mensaje de texto predefinido
-                    final url = Uri.parse(
-                        'https://wa.me/${numeroDeTelofono.numeroDeTelefonoPlano}?text=hola');
-                    launchUrl(url);
+                    numeroDeTelofono.abrirEnWhatsApp();
                   },
                 );
               },
@@ -83,7 +81,8 @@ class _PaginaAgregarNumerosState extends State<PaginaAgregarNumeros> {
   void _agregarNumero({void Function(NumeroDeTelefono)? despuesDeAgregar}) {
     final esValido = _idForm.currentState?.validate() ?? false;
     if (esValido) {
-      final numeroPlano = '+51${_maskNumero.getUnmaskedText()}';
+      final numeroSinFormato = _maskNumero.getUnmaskedText();
+      final numeroPlano = numeroSinFormato.cadenaConCodigoDePais();
       final numeroConFormato = _maskNumero.getMaskedText();
       final elNumeroExiste =
           widget.numerosDeTelefono.cast<NumeroDeTelefono?>().firstWhere(
