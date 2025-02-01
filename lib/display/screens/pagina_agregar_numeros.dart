@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:numeros_whats_app/core/ui/input_personalizado.dart';
+import 'package:numeros_whats_app/display/ui/input_personalizado.dart';
 import 'package:numeros_whats_app/extensions/numero_de_telefono_extension.dart';
 import 'package:numeros_whats_app/extensions/string_extension.dart';
 import 'package:numeros_whats_app/models/numero_de_telefono.dart';

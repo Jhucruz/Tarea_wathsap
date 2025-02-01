@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:numeros_whats_app/core/ui/tarjeta_informacion_telefono.dart';
+import 'package:numeros_whats_app/display/ui/tarjeta_informacion_telefono.dart';
 import 'package:numeros_whats_app/models/numero_de_telefono.dart';
 
 class PaginaListaDeNumeros extends StatefulWidget {

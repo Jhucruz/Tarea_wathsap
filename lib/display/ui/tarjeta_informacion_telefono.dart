@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:numeros_whats_app/extensions/numero_de_telefono_extension.dart';
 import 'package:numeros_whats_app/models/numero_de_telefono.dart';
-import 'package:numeros_whats_app/routes/routes.dart';
+import 'package:numeros_whats_app/display/routes/routes.dart';
 
 class TarjetaInformacionTelefono extends StatelessWidget {
   const TarjetaInformacionTelefono({

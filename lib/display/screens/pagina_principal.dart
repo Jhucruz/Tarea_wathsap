@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:numeros_whats_app/core/screens/pagina_agregar_numeros.dart';
-import 'package:numeros_whats_app/core/screens/pagina_lista_de_numeros.dart';
+import 'package:numeros_whats_app/display/screens/pagina_agregar_numeros.dart';
+import 'package:numeros_whats_app/display/screens/pagina_lista_de_numeros.dart';
 import 'package:numeros_whats_app/models/numero_de_telefono.dart';
 
 class PaginaPrincipal extends StatefulWidget {
