@@ -26,6 +26,7 @@ class _PaginaAgregarNumerosState extends State<PaginaAgregarNumeros> {
   final _maskNumero = MaskTextInputFormatter(mask: '(+51) ### ### ###');
   final _numeroTelefonoController = TextEditingController();
   final _descripcionController = TextEditingController();
+  final _mensajeInicialControler = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +54,11 @@ class _PaginaAgregarNumerosState extends State<PaginaAgregarNumeros> {
               validator: (valor) =>
                   RequiredValidator(errorText: 'La descripcion es requerida')
                       .call(valor),
+            ),
+            InputPersonalizado(
+              label: 'Mensaje inicial',
+              controller: _mensajeInicialControler,
+              maxLength: 20,
             ),
             ElevatedButton.icon(
               onPressed: () {
@@ -107,12 +113,13 @@ class _PaginaAgregarNumerosState extends State<PaginaAgregarNumeros> {
       } else {
         final id = Uuid().v1();
         final descripcion = _descripcionController.text;
+        final mensajeInicial = _mensajeInicialControler.text;
         final numeroDeTelefono = NumeroDeTelefono(
-          id: id,
-          numeroDeTelefonoPlano: numeroPlano,
-          numeroDeTelefonoFormateado: numeroConFormato,
-          descripcion: descripcion,
-        );
+            id: id,
+            numeroDeTelefonoPlano: numeroPlano,
+            numeroDeTelefonoFormateado: numeroConFormato,
+            descripcion: descripcion,
+            mensajeInicial: mensajeInicial);
 
         widget.alAgregar(numeroDeTelefono);
 
@@ -120,6 +127,7 @@ class _PaginaAgregarNumerosState extends State<PaginaAgregarNumeros> {
 
         _numeroTelefonoController.clear();
         _descripcionController.clear();
+        _mensajeInicialControler.clear();
       }
       FocusManager.instance.primaryFocus?.unfocus();
     }
@@ -129,6 +137,7 @@ class _PaginaAgregarNumerosState extends State<PaginaAgregarNumeros> {
   void dispose() {
     _numeroTelefonoController.dispose();
     _descripcionController.dispose();
+    _mensajeInicialControler.dispose();
     super.dispose();
   }
 }
