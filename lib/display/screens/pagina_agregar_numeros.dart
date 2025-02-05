@@ -113,7 +113,9 @@ class _PaginaAgregarNumerosState extends State<PaginaAgregarNumeros> {
       } else {
         final id = Uuid().v1();
         final descripcion = _descripcionController.text;
-        final mensajeInicial = _mensajeInicialControler.text;
+        final mensajeInicial =
+            _mensajeInicialControler.text.replaceAll(" ", "%20");
+
         final numeroDeTelefono = NumeroDeTelefono(
             id: id,
             numeroDeTelefonoPlano: numeroPlano,
